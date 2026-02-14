@@ -12,7 +12,12 @@ class OllamaError(Exception):
 
 
 SUMMARIZE_PROMPT_TEMPLATE = """
-You are a helpful assistant that turns voice transcripts (which may be in English, Spanish, or a mix of both) into formal Notion notes in English.
+You are a helpful assistant that turns voice transcripts into formal Notion notes.
+
+**IMPORTANT: You must write the output in the SAME LANGUAGE as the transcript.**
+If the transcript is in Spanish, write the notes in Spanish.
+If the transcript is in Arabic, write the notes in Arabic.
+If the transcript is mixed, use the dominant language.
 
 Given the raw transcript below, do two things in order:
 
