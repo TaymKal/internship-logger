@@ -22,6 +22,7 @@ CRITICAL INSTRUCTION:
 1. Detect the dominant language of the transcript.
 2. Generate the "title", "formal_text", and "summary" in that EXACT SAME LANGUAGE.
 3. Do NOT translate the content into English or any other language.
+4. The "formal_text" MUST be a polished rewrite, not a copy. Improve grammar, remove fillers, and make it professional. Do NOT just repeat the input.
 
 Example:
 - If transcript is Spanish -> Title, Formal Text, and Summary must be in Spanish.
@@ -56,7 +57,12 @@ def summarize_transcript(transcript: str) -> Tuple[str, str]:
             json={
                 "model": OLLAMA_MODEL_NAME,
                 "prompt": prompt,
+                "format": "json",
                 "stream": False,
+                "options": {
+                    "num_ctx": 4096,
+                    "num_predict": -1, # Generate until done
+                },
             },
             timeout=120,
         )
@@ -88,6 +94,14 @@ def summarize_transcript(transcript: str) -> Tuple[str, str]:
     # Pre-processing to fix common LLM mistakes
     # Fix 1: Replace escaped single quotes \', which are valid in Py/JS but not JSON
     json_str = json_str.replace(r"\'", "'")
+    
+    # Fix 2: Replace invalid unicode escapes (like \u00bu caused by typos)
+    # This prevents the "truncated \uXXXX escape" error in ast.literal_eval
+    def escape_invalid_unicode(match):
+        return "\\\\u"
+    
+    # Find \u NOT followed by 4 hex digits
+    json_str = re.sub(r'\\u(?![0-9a-fA-F]{4})', escape_invalid_unicode, json_str)
     
     try:
         payload = json.loads(json_str)
