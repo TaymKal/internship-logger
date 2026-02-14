@@ -1,4 +1,7 @@
+import ast
+import json
 import os
+import re
 from typing import Tuple
 
 import requests
@@ -11,23 +14,24 @@ class OllamaError(Exception):
     """Raised when the Ollama summarization fails."""
 
 
+
 SUMMARIZE_PROMPT_TEMPLATE = """
-You are a helpful assistant that turns voice transcripts into formal Notion notes.
+You are an expert AI assistant. Your task is to rewrite and summarize the given transcript.
 
-**IMPORTANT: You must write the output in the SAME LANGUAGE as the transcript.**
-If the transcript is in Spanish, write the notes in Spanish.
-If the transcript is in Arabic, write the notes in Arabic.
-If the transcript is mixed, use the dominant language.
+CRITICAL INSTRUCTION:
+1. Detect the dominant language of the transcript.
+2. Generate the "title", "formal_text", and "summary" in that EXACT SAME LANGUAGE.
+3. Do NOT translate the content into English or any other language.
 
-Given the raw transcript below, do two things in order:
+Example:
+- If transcript is Spanish -> Title, Formal Text, and Summary must be in Spanish.
+- If transcript is English -> Title, Formal Text, and Summary must be in English.
 
-1. Rewrite it into clear, formal prose (correct grammar, full sentences, no filler). Put that in "formal_text".
-2. Write a concise summary as bullet points. Each bullet should start with "- ". Put that in "summary".
-
-Produce a JSON object with these keys:
-- "title": a short descriptive title (max 80 characters).
-- "formal_text": the transcript rewritten as formal, well-written text (paragraphs allowed).
-- "summary": a concise bullet-point summary as a SINGLE STRING (not an array). Each bullet on its own line, starting with "- ".
+Return a JSON object with:
+- "language": The detected language (e.g., "English", "Spanish").
+- "title": A short descriptive title in the detected language.
+- "formal_text": The rewritten formal text in the detected language.
+- "summary": A bulleted summary in the detected language (as a single string with newlines).
 
 Transcript:
 \"\"\"{transcript}\"\"\"
@@ -78,10 +82,23 @@ def summarize_transcript(transcript: str) -> Tuple[str, str]:
         json_str = json_str.strip("`")
         if json_str.lower().startswith("json"):
             json_str = json_str[4:]
+            
+    json_str = json_str.strip()
+    
+    # Pre-processing to fix common LLM mistakes
+    # Fix 1: Replace escaped single quotes \', which are valid in Py/JS but not JSON
+    json_str = json_str.replace(r"\'", "'")
+    
     try:
         payload = json.loads(json_str)
-    except json.JSONDecodeError as exc:
-        raise OllamaError(f"Could not parse Ollama JSON: {exc}\n{full_response}") from exc
+    except json.JSONDecodeError:
+        try:
+            # Fallback: Try ast.literal_eval (handles Python dicts, single quotes, slightly different escapes)
+            payload = ast.literal_eval(json_str)
+            if not isinstance(payload, dict):
+                raise ValueError("Parsed output is not a dictionary.")
+        except (ValueError, SyntaxError, TypeError) as exc:
+             raise OllamaError(f"Could not parse Ollama response as JSON or Python dict: {exc}\nResponse: {full_response}") from exc
 
     title = str(payload.get("title", "Untitled Note")).strip() or "Untitled Note"
     formal_text = str(payload.get("formal_text", "")).strip()
