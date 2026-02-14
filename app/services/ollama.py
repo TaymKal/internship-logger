@@ -12,7 +12,7 @@ class OllamaError(Exception):
 
 
 SUMMARIZE_PROMPT_TEMPLATE = """
-You are a helpful assistant that turns voice transcripts into formal Notion notes.
+You are a helpful assistant that turns voice transcripts (which may be in English, Spanish, or a mix of both) into formal Notion notes in English.
 
 Given the raw transcript below, do two things in order:
 

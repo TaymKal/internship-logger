@@ -35,7 +35,7 @@ def transcribe_audio_file(audio_path: Path) -> str:
         # Transcribe the audio
         result = model.transcribe(
             str(audio_path),
-            language="en",
+            # language="en", # Auto-detect language
             fp16=False,  # Disable FP16 for CPU compatibility
         )
         

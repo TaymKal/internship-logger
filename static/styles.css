@@ -392,3 +392,36 @@ body {
     text-align: center;
     max-width: 400px;
 }
+
+/* ── Language Selector ─────────────────────────────────────────────────── */
+
+.lang-container {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.lang-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.lang-select:hover,
+.lang-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.lang-select option {
+    background: #1a1a1a;
+    color: white;
+}

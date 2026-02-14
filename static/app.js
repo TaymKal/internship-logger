@@ -64,7 +64,10 @@ function startSpeechRecognition() {
     recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+
+    const langSelect = document.getElementById('langSelect');
+    recognition.lang = langSelect ? langSelect.value : 'en-US';
+
     finalTranscript = '';
 
     recognition.onresult = (event) => {
@@ -366,3 +369,14 @@ retryBtn.addEventListener('click', () => {
     resetAll();
     showScreen('record');
 });
+
+// Update language dynamically if changed during recording
+const langSelect = document.getElementById('langSelect');
+if (langSelect) {
+    langSelect.addEventListener('change', () => {
+        if (recognition) {
+            recognition.lang = langSelect.value;
+            recognition.stop();
+        }
+    });
+}
