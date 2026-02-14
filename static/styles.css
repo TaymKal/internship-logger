@@ -1,0 +1,394 @@
+/* ── Reset & Base ──────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #1e1e2f 0%, #050509 55%, #000000 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 3rem;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+
+.app {
+    width: 100%;
+    max-width: 480px;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── Typography ────────────────────────────────────────────────────────── */
+
+.main-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.record-prompt {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+/* ── Screens ───────────────────────────────────────────────────────────── */
+
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ── Record Button ─────────────────────────────────────────────────────── */
+
+.record-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0 1.5rem;
+}
+
+.record-btn {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ff4444;
+    border: 5px solid #ffffff;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(255, 68, 68, 0.5);
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.record-btn .record-icon {
+    font-size: 3rem;
+    color: white;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.record-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(255, 68, 68, 0.7);
+}
+
+.record-btn:active {
+    transform: scale(0.97);
+}
+
+.record-btn.recording {
+    border-radius: 25%;
+    background: #ff0000;
+    animation: pulse-recording 1.5s infinite;
+}
+
+.record-btn.recording .record-icon {
+    font-size: 2rem;
+}
+
+@keyframes pulse-recording {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(255, 0, 0, 0.5);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 40px rgba(255, 0, 0, 0.7);
+    }
+}
+
+/* ── Live Transcript Box ───────────────────────────────────────────────── */
+
+.transcript-box {
+    width: 100%;
+    max-width: 400px;
+    min-height: 80px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+}
+
+.transcript-box.hidden {
+    display: none;
+}
+
+.transcript-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    font-style: italic;
+}
+
+.transcript-text .interim {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Clips List ────────────────────────────────────────────────────────── */
+
+.clips-list {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.clips-list.hidden {
+    display: none;
+}
+
+.clip-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.5rem;
+}
+
+.clip-card audio {
+    flex: 1;
+    height: 36px;
+    min-width: 0;
+}
+
+.clip-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.clip-remove {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.clip-remove:hover {
+    color: #ff4b4b;
+    background: rgba(255, 75, 75, 0.15);
+}
+
+.clip-actions {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 0.75rem;
+}
+
+.clip-actions.hidden {
+    display: none;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+
+.btn {
+    padding: 0.65rem 1.3rem;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    flex: 1;
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #000000;
+}
+
+.btn-primary:hover {
+    background: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* ── Status Box ────────────────────────────────────────────────────────── */
+
+.status-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    background: rgba(10, 10, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+}
+
+.status-dot.recording {
+    background: #ff4444;
+    animation: pulse-dot 1s infinite;
+}
+
+.status-dot.processing {
+    background: #1ac466;
+    animation: pulse-dot 1.5s infinite;
+}
+
+.status-dot.done {
+    background: #1ac466;
+}
+
+.status-dot.error {
+    background: #ff4b4b;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+}
+
+/* ── Success Screen ────────────────────────────────────────────────────── */
+
+.big-check {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid #1ac466;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    color: #1ac466;
+    box-shadow: 0 0 30px rgba(26, 196, 102, 0.55);
+}
+
+.check-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.check-sub {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+}
+
+.check-sub a {
+    color: #1ac466;
+    text-decoration: none;
+}
+
+.check-sub a:hover {
+    text-decoration: underline;
+}
+
+/* ── Error Screen ──────────────────────────────────────────────────────── */
+
+.error-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid #ff4b4b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    color: #ff4b4b;
+    box-shadow: 0 0 30px rgba(255, 75, 75, 0.4);
+}
+
+.error-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.error-detail {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 400px;
+}

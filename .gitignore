@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+
+# SQLite queue database
+queue.db
+queue.db-wal
+queue.db-shm
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Logger</title>
+    <meta name="description" content="Record voice notes and send them to Notion">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app">
+        <h1 class="main-title">Internship Logger</h1>
+        <p class="subtitle">Tell me about your day</p>
+
+        <!-- Recording Screen -->
+        <div id="screen-record" class="screen active">
+            <p class="record-prompt">Record Your Audio</p>
+
+            <div class="record-button-container">
+                <button id="recordBtn" class="record-btn" aria-label="Start recording">
+                    <span class="record-icon">●</span>
+                </button>
+            </div>
+
+            <!-- Live Transcript -->
+            <div id="transcriptBox" class="transcript-box hidden">
+                <p id="transcriptText" class="transcript-text">Listening...</p>
+            </div>
+
+            <!-- Recorded Clips List -->
+            <div id="clipsList" class="clips-list hidden"></div>
+
+            <!-- Actions (shown after at least one recording) -->
+            <div id="clipActions" class="clip-actions hidden">
+                <button id="addMoreBtn" class="btn btn-secondary">➕ Add another</button>
+                <button id="sendBtn" class="btn btn-primary">📤 Send to Notion</button>
+            </div>
+
+            <!-- Status Box -->
+            <div id="statusBox" class="status-box">
+                <div id="statusDot" class="status-dot"></div>
+                <span id="statusText">Idle</span>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="screen-done" class="screen">
+            <div class="big-check">✓</div>
+            <p class="check-label">Saved to Notion</p>
+            <p id="notionLink" class="check-sub"></p>
+            <button id="newRecordingBtn" class="btn btn-primary">Record another</button>
+        </div>
+
+        <!-- Error Screen -->
+        <div id="screen-error" class="screen">
+            <div class="error-icon">✕</div>
+            <p class="error-label">Something went wrong</p>
+            <p id="errorMessage" class="error-detail"></p>
+            <button id="retryBtn" class="btn btn-primary">Try again</button>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
